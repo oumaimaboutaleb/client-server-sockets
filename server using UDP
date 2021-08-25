@@ -1,0 +1,24 @@
+import java.net.*;
+
+public class Serveur{
+
+  final static int port = 9632;
+   static int taille=1024;
+  static byte buffer[] = new byte[taille];
+
+public static void main(String argv[]) throws Exception {
+	DatagramSocket socket = new DatagramSocket(port);//création du socket pour se connecter 
+
+    System.out.println("Le serveur attend un message ");
+    while (true) {
+      DatagramPacket paquet = new DatagramPacket(buffer, buffer.length);//création du paquet qui va contenir les données recues
+      socket.receive(paquet);//la réception du paquet
+      taille = paquet.getLength();
+      String donnees = new String(paquet.getData(),0, taille);//conversion du paquet en une  chaine
+      System.out.println("les données envoyées : "+donnees);
+      
+      socket.close();//fermeture du socket
+      System.exit(0);
+    }
+  }
+}
