@@ -1,0 +1,26 @@
+import java.io.*;
+import java.net.*;
+
+public class Client {
+public static void main(String[]args) throws Exception{
+		
+	    System.out.println("écrire votre message au serveur");
+		BufferedReader inp=new BufferedReader(new InputStreamReader(System.in));//création d'un Buffer pour assurer la réception 
+		
+	while(true) {	
+		InetAddress IP_add;// création d'un objet pour contenir l'adresse IP
+		IP_add = InetAddress.getByName("localhost");//l'affectation de l'adresse IP du localhost
+		byte out[]=new byte[1024];//création d'un objet de type byte pour contenir le message à envoyer
+		String Str;
+		Str = inp.readLine();//lecture du message écrit par le client sous la forme d'une chaine 
+        out=Str.getBytes();//convertir la chaine de caractère en type byte
+        DatagramSocket clientSocket=new DatagramSocket();//création du socket pour assurer l'envoi
+	    DatagramPacket packet1 =new DatagramPacket(out,out.length,IP_add,9632);//création du packet 
+		clientSocket.send(packet1);//envoi du packet
+		inp.close();//fermeture du Buffer
+	    clientSocket.close();//fermeture du socket
+	    System.exit(0);
+	
+	
+	}
+	}}
