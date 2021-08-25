@@ -1,0 +1,33 @@
+package projet_teleinfo;
+import java.net.*;
+
+import javax.swing.JOptionPane;
+
+import java.io.*;
+
+public class Client
+{
+public static void main(String[] args) throws IOException
+{final String HOST = "127.0.0.1";
+final int PORT = 1342;
+	  System.out.println("Client started and connected !");
+Socket s = new Socket(HOST, PORT);//declaration d une socket qui qe connecte a un serveur
+PrintWriter out = new PrintWriter(s.getOutputStream(), true);//permet d'envoyer au serveur
+BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));//permet de recevoir un message du serveur
+String msg="";
+while(true){
+	//demander au client d'envoyer une chaine
+	String toServer = JOptionPane.showInputDialog(null,"Send something (a string) to server");
+	out.println(toServer);//envoyer le message au serveur
+	msg = input.readLine();//recevoir le message envoyé par le serveur(pour la vérification)
+	System.out.println(msg);//afficher le message envoyé par le serveur sur l'écran
+	if (toServer.equals("quit")) break;//quitter si le client entre "quit" 
+	}
+
+out.close();
+
+input.close();
+	s.close();
+	System.exit(0);
+	}
+	}
