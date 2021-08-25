@@ -1,0 +1,42 @@
+package projet_teleinfo;
+import java.net.*;
+
+import java.io.*;
+public class Server
+{
+public static void main(String[] args) throws IOException
+{
+	
+ServerSocket listener = new ServerSocket(1342);//creer un serveur sur le port 1342(choix arbitraire)
+System.out.println("Server is currently running");
+System.out.println("Wating for a client...");
+Socket socket = listener.accept();//le serveur ici attend une requete du client
+   
+//get output stream of client:permet au serveur d'envoyer un message au client
+//ceci est un plus pour vérifier la bonne connectivité entre le serveur et le client 
+PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+     //get input stream of client:permet au serveur de recevoir un message du client
+BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+String msg="";//initialise la chaine msg
+
+while(true)//cette boucle permet au client de saisir plusieurs chaine et s il veut arreter il envoit "quit"
+{
+         msg = input.readLine();//récupérer le message du client 
+       if (msg.equals("quit"))
+          {
+         out.println("From Server !:connection is finished");
+          break;
+             }
+else {
+	out.println("From Server: "+msg);
+System.out.println("the message sent from the client is:"+msg);//ici le serveur affiche la chaine envoyé par le client
+	
+}
+}
+out.close();
+input.close();
+socket.close();//fermeture de la socket 
+}
+
+}
