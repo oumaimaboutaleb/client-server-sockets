@@ -1,0 +1,37 @@
+package projet_teleinfo;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+ public class demoserver {
+
+ public static void main(String[] args) {
+ServerSocket server=null;
+Socket client=null;
+try {
+server=new ServerSocket(8866);//Create a server socket
+System.out.println("Server has started, waiting for client connection...");
+}catch (IOException e) {
+System.out.println("Server Socket Creation Error");
+}
+while(true){
+try {
+client=server.accept();//Connect to the client
+System.out.println("Client is connected, can communicate..." +client);
+} catch (IOException e1){
+System.out.println("Client connection error");
+}
+if(client!=null){// is used to connect multiple clients at the same time
+new servercalculator(client).start();
+}
+}
+}
+
+}
