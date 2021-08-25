@@ -1,0 +1,32 @@
+package projet_teleinfo;
+import java.net.*;
+
+import javax.swing.JOptionPane;
+
+import java.io.*;
+
+
+public class Clientmulti {
+	
+    public static void main(String[] args) throws IOException {
+        final String HOST = "127.0.0.1";
+        final int PORT = 4040;
+        
+        System.out.println("Client started.");
+        
+        try (
+            Socket socket = new Socket(HOST, PORT);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        ) {String msg="";
+            while (true) {
+           String toServer = JOptionPane.showInputDialog(null,"Send something (a string) to server");
+            out.println(toServer);
+            msg = input.readLine();
+            System.out.println(" from server " + msg);
+            if (toServer.equals("quit")) break;
+            }
+        }
+    }
+ 
+}
