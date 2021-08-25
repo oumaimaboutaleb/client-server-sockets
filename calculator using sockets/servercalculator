@@ -1,0 +1,76 @@
+package projet_teleinfo;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
+ public class servercalculator extends Thread {
+Socket client; // definir la socket du client
+DataInputStream datain=null;//definir l input 
+InputStream in=null;
+DataOutputStream dataout=null;//definir l output
+OutputStream out=null;
+float num_one;
+float num_two;
+float result;
+int symbol;
+public servercalculator(Socket client){
+this.client=client;
+}
+
+ public void run() {
+try {
+in=client.getInputStream();
+datain=new DataInputStream(in);
+out=client.getOutputStream();
+dataout=new DataOutputStream(out);
+while(true){
+symbol=datain.readInt();
+switch (symbol){ //calcul
+case 1:
+num_one=datain.readFloat();//lire l'entier
+num_two=datain.readFloat();
+result=num_one+num_two;
+dataout.writeFloat(result);break;//Transferer le resultat au client
+case 2:
+num_one=datain.readFloat();
+num_two=datain.readFloat();
+result=num_one-num_two;
+dataout.writeFloat(result);break;
+case 3:
+num_one=datain.readFloat();
+num_two=datain.readFloat();
+result=num_one*num_two;
+dataout.writeFloat(result);break;
+case 4:
+num_one=datain.readFloat();
+num_two=datain.readFloat();
+result=num_one/num_two;
+dataout.writeFloat(result);break;
+default:break;
+}
+}
+}catch (IOException e) {
+e.printStackTrace();
+}
+try {//fermer les sockets ,les entrés et les sorties 
+in.close();
+datain.close();
+out.close();
+dataout.close();
+client.close();
+} catch (IOException e) {
+System.out.println(client.isConnected());
+e.printStackTrace();}
+}
+
+ }
