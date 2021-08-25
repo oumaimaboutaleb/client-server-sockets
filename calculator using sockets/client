@@ -1,0 +1,379 @@
+package projet_teleinfo;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+ public class clientcalculator  extends JFrame implements Runnable,ActionListener{
+
+ Socket client=null;
+DataInputStream datain=null;
+InputStream in=null;
+DataOutputStream dataout=null;
+OutputStream out=null;
+String[][] inputButtonNames={{"","",""," "},{"1","2","3","+"},{"4","5","6","-"},{"7","8","9","*"},{".","0","=","/"}};
+// Define a two-dimensional array bearing button name inputButtonNames
+JTextField show=new JTextField();//Create input box textField
+JButton[] inButton=new JButton[20];//Create input button inButton
+String[] resetButtonNames={" Clear", "Clear"}; // Define the clear button name resetButtonNames
+JButton[] resetButton=new JButton[2];//Create clear button resetButton
+String tempText=""; // used to temporarily store the first button number (string)
+int symbol=0;// is used to judge the operation symbol
+float num_one; // used to store the number before the input operator symbol (has been converted)
+float num_two; // used to store the number after the input operator symbol (has been converted)
+float result; // used to store the result of the operation
+int number=0;// is used to judge the number of inputs
+Boolean com=false;// is used to determine whether the operand and decimal point are entered
+
+public clientcalculator() { // calculation panel no parameter constructor
+super ("client"); // call the parent class method
+this.setBounds(300,300,252, 264);//Set the form size and position on the screen
+JPanel ibp=new JPanel();//Create input box panel input box panel
+show.setText("0");//Set the input box initial number "0"
+show.setColumns(21);//Set the number of input box columns
+show.setEditable(false);//Set the input box to be uneditable
+show.setHorizontalAlignment(SwingConstants.RIGHT);//Set the orientation of the input box: North
+ibp.add(show);//Add the input box to the input box panel
+this.add(ibp, BorderLayout.NORTH);//Set the orientation of the input box panel: north
+JPanel bp=new JPanel();//Set the input button panel button panel
+GridLayout gridLayout=new GridLayout(5,4,4,4);//Web layout
+bp.setLayout(gridLayout);//Input button panel uses grid layout
+for(int i=0;i<5;i++){//Using arrays, loops, and inserting input buttons one by one
+for(int j=0;j<inputButtonNames[0].length;j++){
+inButton[i*4+j]=new JButton(inputButtonNames[i][j]);
+bp.add(inButton[i*4+j]);//Add an input button to the input button panel
+inButton[i*4+j].addActionListener(this);//Give action listener
+}
+}
+this.add(bp, BorderLayout.SOUTH);//Set the orientation of the input button panel: set south
+JPanel cbp=new JPanel();//Create clear button and trigonometric button panel clean button panel
+for(int i=0;i<resetButtonNames.length;i++){////Use the array, loop to insert the clear button one by one
+resetButton[i]=new JButton(resetButtonNames[i]);
+cbp.add(resetButton[i]);//Add a clear button to the clear button
+resetButton[i].addActionListener(this);// gives action listener
+}
+this.add(cbp, BorderLayout.CENTER);//Set the orientation of the clear button panel: centered
+this.setVisible(true);//Set the form to visible
+try {
+client=new Socket("localhost",8866);//Create a local socket
+} catch (IOException e4) {
+e4.printStackTrace();
+}
+try {
+out=client.getOutputStream();
+dataout=new DataOutputStream(out);
+in=client.getInputStream();
+datain=new DataInputStream(in);
+} catch (IOException ee) {
+ee.printStackTrace();
+}
+}
+public void run(){//thread running
+}
+@Override
+public void actionPerformed(ActionEvent e) {
+
+
+ if (e.getSource() == inButton[4]) {//Number 1 action listener
+if(com==true||number==0){//first input
+ show.setText("1");//output the number entered for the first time
+number=1;
+com=false;
+}
+else{ // not the first input
+tempText=show.getText();//Get the number entered for the first time
+show.setText(tempText+"1");// output the number of n inputs together
+}
+}
+else if (e.getSource() == inButton[5]) {//Number 2 action listener
+if(com||number==0){
+show.setText("2");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"2");
+}
+}
+else if (e.getSource() == inButton[6]) {//Digital 3 action listener
+if(com||number==0){
+show.setText("3");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"3");
+}
+}
+if (e.getSource() == inButton[7]) { //plus action listener
+com=true;
+number=0;
+symbol=5;
+num_one=Float.parseFloat(show.getText());//Convert the obtained string to a number
+show.setText("+");
+}
+else if (e.getSource() == inButton[8]) {//Number 4 action listener
+if(com||number==0){
+show.setText("4");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"4");
+}
+}
+else if (e.getSource() == inButton[9]) {//Number 5 action listener
+if(com||number==0){
+show.setText("5");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"5");
+}
+}
+else if (e.getSource() == inButton[10]) {//Number 6 action listener
+if(com||number==0){
+show.setText("6");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"6");
+}
+}
+else if (e.getSource() == inButton[11]) {// minus sign action listener
+com=true;
+number=0;
+symbol=6;
+num_one=Float.parseFloat(show.getText());//Convert the obtained string to a number
+show.setText("-");
+}
+else if (e.getSource() == inButton[12]) {//Number 7 action listener
+if(com||number==0){
+show.setText("7");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"7");
+}
+}
+else if (e.getSource() == inButton[13]) {//Number 8 action listener
+if(com||number==0){
+show.setText("8");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"8");
+}
+}
+else if (e.getSource() == inButton[14]) {//Number 9 action listener
+if(com||number==0){
+show.setText("9");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"9");
+}
+}
+else if (e.getSource() == inButton[15]) {//Multiply action listener
+com=true;
+number=0;
+symbol=7;
+num_one=Float.parseFloat(show.getText());//Convert the obtained string to a number
+show.setText("*");
+}
+else if (e.getSource() == inButton[16]) {
+if(com||number==0){//To be perfected: make it impossible to press this button for the first time
+show.setText(".");
+number=1;
+com=false;
+}
+else{// determine whether the obtained string contains a decimal point "."
+tempText=show.getText();
+if(tempText.indexOf(".")==-1){
+show.setText(tempText+".");
+}
+else{show.setText(tempText);}
+}
+}
+else if (e.getSource() == inButton[17]) {//Number 0 action listener
+if(com||number==0){
+show.setText("0");
+number=1;
+com=false;
+}
+else{
+tempText=show.getText();
+show.setText(tempText+"0");
+}
+}
+else if (e.getSource() == inButton[18]) {// equals action listener
+num_two=Float.parseFloat(show.getText());//Get the string after the input operator symbol and convert
+switch(symbol){
+case 1:try {
+dataout.writeInt(symbol);
+dataout.writeFloat(num_two);
+result=datain.readFloat();
+number=0;//Ibid.
+show.setText(""+result);
+} catch (IOException e2) {
+e2.printStackTrace();
+}break;
+case 2:try {
+dataout.writeInt(symbol);
+dataout.writeFloat(num_two);
+result=datain.readFloat();
+number=0;//Ibid.
+show.setText(""+result);
+} catch (IOException e2) {
+e2.printStackTrace();
+}break;
+case 3:try {
+dataout.writeInt(symbol);
+dataout.writeFloat(num_two);
+result=datain.readFloat();
+number=0;//Ibid.
+show.setText(""+result);
+} catch (IOException e2) {
+e2.printStackTrace();
+}break;
+case 4:try {
+dataout.writeInt(symbol);
+dataout.writeFloat(num_two);
+result=datain.readFloat();
+number=0;//Ibid.
+show.setText(""+result);
+} catch (IOException e2) {
+e2.printStackTrace();
+}break;
+case 5:try {
+dataout.writeInt(symbol);
+dataout.writeFloat(num_one);
+dataout.writeFloat(num_two);
+result=datain.readFloat();
+number=0;//Ibid.
+show.setText(""+result);
+} catch (IOException e1) {
+e1.printStackTrace();
+}break;
+case 6:try {
+dataout.writeInt(symbol);
+dataout.writeFloat(num_one);
+dataout.writeFloat(num_two);
+result=datain.readFloat();
+number=0;//Ibid.
+show.setText(result+"");
+} catch (IOException e1) {
+e1.printStackTrace();
+}break;
+case 7:try {
+dataout.writeInt(symbol);
+dataout.writeFloat(num_one);
+dataout.writeFloat(num_two);
+result=datain.readFloat();
+number=0;//Ibid.
+show.setText(result+"");
+} catch (IOException e1) {
+e1.printStackTrace();
+}break;
+case 8:try {
+dataout.writeInt(symbol);
+dataout.writeFloat(num_one);
+dataout.writeFloat(num_two);
+result=datain.readFloat();
+number=0;//Ibid.
+show.setText(result+"");
+} catch (IOException e1) {
+e1.printStackTrace();
+}break;//same as above
+}
+}
+else if(e.getSource() == inButton[19]) {//The action monitor for the divisor
+com=true;
+number=0;
+symbol=8;
+num_one=Float.parseFloat(show.getText());//Convert the obtained string to a number
+show.setText("/");
+}
+else if (e.getSource() == resetButton[0]){//clear button AC
+number=0;//The effect is the same as the explanation of the equal sign "number=0"
+symbol=0;//reset symbol
+show.setText("0");
+}
+else if (e.getSource() == resetButton[1]){//single byte clear button C
+number=0;//The effect is the same as the explanation of the equal sign "number=0"
+symbol=0;//reset symbol
+tempText=show.getText();
+if(tempText.equals("sin")||tempText.equals("cos")||tempText.equals("tan")||(tempText.length()-1)==0){//Judge tempText Is it a single byte?
+show.setText("0");
+}
+else {
+show.setText(tempText.substring(0,tempText.length()-1));
+if(tempText.length()==0)
+{show.setText("0");}
+}
+}
+}
+
+//Client main method:
+//package com.netproject2;
+
+ //public class DemoClient {
+
+ public static void main(String[] args) {
+	 clientcalculator p = new clientcalculator();
+new Thread(p).start();
+}}
